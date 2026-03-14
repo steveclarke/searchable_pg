@@ -1,0 +1,57 @@
+# frozen_string_literal: true
+
+module SearchContent
+  class <%= class_name %> < SearchContent::Base
+    SEARCH_FIELDS = {
+<% if search_fields.any? -%>
+<% search_fields.each_with_index do |field, index| -%>
+<% weight = %w[A B C D][index] || "D" -%>
+<% is_last_field = (index == search_fields.length - 1) && !options[:project] -%>
+      <%= field %>: "<%= weight %>"<%= "," unless is_last_field %>
+<% end -%>
+<% else -%>
+      # Add your searchable fields with weights, e.g.:
+      # name: "A",              # Highest priority
+      # code: "B",              # Medium priority
+      # description: "C",       # Lower priority
+      # field_without_weight: nil  # Included but not weighted
+<% end -%>
+<% if options[:project] -%>
+      search_projection: nil
+<% end -%>
+    }
+
+    def self.search_fields = SEARCH_FIELDS
+
+    def self.using
+      {
+<% if options[:project] -%>
+        trigram: {word_similarity: true, threshold: 0.25},
+        tsearch: {prefix: true, negation: true, any_word: true, dictionary: "english"}
+<% else -%>
+        trigram: {word_similarity: true, threshold: 0.3},
+        tsearch: {prefix: true, any_word: true, dictionary: "english"}
+<% end -%>
+      }
+    end
+
+    def self.scope_options
+      {
+<% if options[:project] -%>
+        ignoring: :accents,
+        ranked_by: ":tsearch * 0.6 + :trigram * 0.4"
+<% else -%>
+        ignoring: :accents
+<% end -%>
+      }
+    end
+
+<% if options[:project] -%>
+    projection do
+      # assoc(:related_model) { |r| r.name }
+      # compute :derived_method
+      # custom { record.some_custom_tokens }
+    end
+<% end -%>
+  end
+end

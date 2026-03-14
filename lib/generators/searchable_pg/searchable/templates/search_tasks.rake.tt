@@ -1,0 +1,6 @@
+namespace :search do
+  desc "Rebuild search_projection for <%= class_name %>"
+  task rebuild_<%= @task_name %>: :environment do
+    <%= class_name %>.find_each(batch_size: 100) { |r| r.rebuild_search_projection }
+  end
+end

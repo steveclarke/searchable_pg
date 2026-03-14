@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+class AddSearchProjectionTo<%= @table_name.classify.pluralize %> < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
+  def change
+    add_column :<%= @table_name %>, :search_projection, :text
+
+    reversible do |dir|
+      dir.up do
+        execute <<~SQL
+          CREATE INDEX index_<%= @table_name %>_on_search_projection_trgm
+            ON <%= @table_name %> USING gin (search_projection gin_trgm_ops)
+        SQL
+      end
+      dir.down do
+        remove_index :<%= @table_name %>, name: :index_<%= @table_name %>_on_search_projection_trgm
+      end
+    end
+  end
+end

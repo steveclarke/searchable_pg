@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class SearchContent::<%= class_name %>Test < ActiveSupport::TestCase
+  test "responds to required class methods" do
+    assert_respond_to SearchContent::<%= class_name %>, :search_fields
+    assert_respond_to SearchContent::<%= class_name %>, :using
+  end
+
+<% if options[:project] -%>
+  test "builds projection" do
+    record = <%= class_name %>.new
+    builder = SearchContent::<%= class_name %>.new(record)
+    assert_kind_of String, builder.search_projection
+  end
+<% end -%>
+end
