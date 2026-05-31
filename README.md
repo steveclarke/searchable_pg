@@ -53,7 +53,7 @@ This creates:
 - `app/models/search_content/article.rb` — the builder
 - `db/migrate/..._add_search_projection_to_articles.rb` — adds a `search_projection` column + GIN index
 - `lib/tasks/search/rebuild_article.rake` — backfill task
-- `test/models/search_content/article_test.rb` — test file
+- `test/models/search_content/article_test.rb` or `spec/models/search_content/article_spec.rb` — test file matching your app
 - Injects `include Searchable` and `searchable_with` into your model
 
 ### 2. Customize the builder
@@ -231,7 +231,8 @@ bin/rails generate searchable_pg:searchable MODEL [fields...] [options]
 | File | When |
 |------|------|
 | `app/models/search_content/<model>.rb` | Always |
-| `test/models/search_content/<model>_test.rb` | Always |
+| `test/models/search_content/<model>_test.rb` | Minitest/default apps |
+| `spec/models/search_content/<model>_spec.rb` | RSpec apps |
 | `db/migrate/..._add_search_projection_to_<table>.rb` | With `--project` |
 | `lib/tasks/search/rebuild_<model>.rake` | With `--project` |
 

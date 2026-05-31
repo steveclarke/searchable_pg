@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
 require "bundler/gem_tasks"
+require "rake/testtask"
 
-task default: :spec
+Rake::TestTask.new do |task|
+  task.libs << "test"
+  task.test_files = FileList["test/**/*_test.rb"].exclude("test/tmp/**/*_test.rb")
+end
+
+task default: :test

@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe SearchContent::<%= class_name %>, type: :model do
+  let(:record) { <%= class_name %>.new }
+  let(:builder) { described_class.new(record) }
+
+  it "responds to required class methods" do
+    expect(described_class).to respond_to(:search_fields, :using)
+  end
+
+<% if options[:project] -%>
+  it "builds projection" do
+    expect(builder.search_projection).to be_a(String)
+  end
+<% end -%>
+end

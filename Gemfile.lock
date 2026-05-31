@@ -151,6 +151,8 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  irb
+  rake (~> 13.0)
   searchable_pg!
 
 CHECKSUMS

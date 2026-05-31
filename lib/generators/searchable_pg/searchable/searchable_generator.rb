@@ -25,7 +25,11 @@ class SearchablePg::SearchableGenerator < Rails::Generators::NamedBase
   end
 
   def create_search_content_test
-    template "search_content_test.rb.tt", File.join("test/models/search_content", "#{file_path}_test.rb")
+    if rspec?
+      template "search_content_spec.rb.tt", File.join("spec/models/search_content", "#{file_path}_spec.rb")
+    else
+      template "search_content_test.rb.tt", File.join("test/models/search_content", "#{file_path}_test.rb")
+    end
   end
 
   def add_search_projection_migration
@@ -71,5 +75,22 @@ class SearchablePg::SearchableGenerator < Rails::Generators::NamedBase
   # Required by Rails::Generators::Migration
   def self.next_migration_number(dirname)
     Time.current.utc.strftime("%Y%m%d%H%M%S")
+  end
+
+  private
+
+  def rspec?
+    test_framework == :rspec || rspec_files_present?
+  end
+
+  def test_framework
+    if defined?(Rails.application) && Rails.application
+      Rails.application.config.generators.options.dig(:rails, :test_framework)
+    end
+  end
+
+  def rspec_files_present?
+    File.exist?(File.join(destination_root, "spec", "rails_helper.rb")) ||
+      File.exist?(File.join(destination_root, "spec", "spec_helper.rb"))
   end
 end
