@@ -1,0 +1,3 @@
+test:
+  adapter: postgresql
+  url: <%= ENV.fetch("DATABASE_URL", "postgres://postgres:nitro@127.0.0.1:54329/searchable_pg_test") %>
