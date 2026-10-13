@@ -16,9 +16,21 @@ ActiveRecord::Migration.verbose = false
 ActiveRecord::Schema.define do
   enable_extension "pg_trgm"
   enable_extension "unaccent"
-  create_table(:golden_contacts, force: true) { |t| t.string :display_name; t.text :search_projection; t.timestamps }
-  create_table(:golden_emails, force: true) { |t| t.references :golden_contact; t.string :email; t.timestamps }
-  create_table(:golden_phones, force: true) { |t| t.references :golden_contact; t.string :number; t.timestamps }
+  create_table(:golden_contacts, force: true) { |t|
+    t.string :display_name
+    t.text :search_projection
+    t.timestamps
+  }
+  create_table(:golden_emails, force: true) { |t|
+    t.references :golden_contact
+    t.string :email
+    t.timestamps
+  }
+  create_table(:golden_phones, force: true) { |t|
+    t.references :golden_contact
+    t.string :number
+    t.timestamps
+  }
 end
 
 module SearchContent
@@ -43,6 +55,7 @@ end
 
 class GoldenContact < ActiveRecord::Base
   include Searchable
+
   has_many :golden_emails
   has_many :golden_phones
   searchable_with SearchContent::GoldenContact, project: true

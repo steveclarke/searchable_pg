@@ -12,7 +12,10 @@ class Person < ApplicationRecord
   scope :including_sample, -> { unscope(where: :sample) }
 
   searchable_with SearchContent::Person, project: true, rebuild: :manual,
-    rebuild_lock: ->(id, &write) { Person.locked << id; write.call }
+    rebuild_lock: ->(id, &write) {
+      Person.locked << id
+      write.call
+    }
   searchable_with SearchContent::PersonName, scope: :search_names
 
   def self.locked = (@locked ||= [])

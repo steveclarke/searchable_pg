@@ -8,7 +8,7 @@ module SearchablePg
   #   bin/rails "searchable_pg:rebuild[Person]"
   #   SearchablePg::RebuildProjectionsJob.perform_later
   module Projections
-    Entry = Struct.new(:model_name, :rebuild_lock, keyword_init: true)
+    Entry = Struct.new(:model_name, :rebuild_lock)
 
     @entries = {}
 

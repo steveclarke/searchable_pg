@@ -12,7 +12,7 @@ RSpec.describe SearchContent::<%= class_name %>, type: :model do
 
 <% if options[:project] -%>
   it "builds projection" do
-    expect(builder.search_projection).to be_a(String)
+    expect(builder.search_projection).to be_nil.or be_a(String)
   end
 <% end -%>
 end

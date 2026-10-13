@@ -62,6 +62,9 @@ module SearchablePg
         end
 
         include PgSearch::Model unless include?(PgSearch::Model)
+        # Which builder serves each scope, for SearchablePg::Testing.
+        class_attribute :searchable_pg_builders, instance_accessor: false, default: {} unless respond_to?(:searchable_pg_builders)
+        self.searchable_pg_builders = searchable_pg_builders.merge(scope.to_sym => content_builder)
 
         options = {
           against: content_builder.search_fields,

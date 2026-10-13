@@ -18,3 +18,4 @@ gem "minitest", "~> 5.25"
 gem "action_policy", "~> 0.7"
 gem "pundit", "~> 2.5"
 gem "standard", "~> 1.50", require: false
+gem "rspec-expectations", "~> 3.13"

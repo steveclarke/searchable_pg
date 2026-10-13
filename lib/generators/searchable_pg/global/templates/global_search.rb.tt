@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+# Global search: one box across every kind of record a person may open
+# (searchable_pg <%= SearchablePg::VERSION %>). A kind runs only when visible,
+# inside its policy scope, before the limit; only the fields declared here
+# leave the server. The block runs on first use and after each code reload.
+SearchablePg::Global.define do |g|
+  g.per_kind = 5
+  g.page_size = 25
+  g.statement_timeout = "500ms"
+  g.authorize_with :<%= options[:policies] %>
+
+  # One block per kind, in display order:
+  #
+  # g.kind :person, label: "People", icon: "i-lucide-user", prefix: "p" do |k|
+  #   k.model Person
+  #   k.policy PersonPolicy                 # or `policy false` when visible alone decides
+  #   k.visible { |user| user.staff? }      # false: no query, no heading
+  #   k.includes :household
+  #   k.title { |person| person.name }
+  #   k.subtitle { |person| person.household&.name }   # never a phone, email or address
+  #   k.url { |person, ctx| ctx.routes.person_path(person) }
+  # end
+end

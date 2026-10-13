@@ -28,7 +28,7 @@ module SearchablePg
     # search replaces `relation.public_send(scope, query)` when the matching
     # lives elsewhere: `k.search { |rel, ctx| People.search(rel, ctx.query) }`.
     class Kind
-      Context = Struct.new(:user, :query, :routes, :options, :prepared, keyword_init: true)
+      Context = Struct.new(:user, :query, :routes, :options, :prepared)
 
       attr_reader :type, :icon, :prefix
 
@@ -45,7 +45,12 @@ module SearchablePg
       # --- DSL ---
 
       def model(klass = nil) = klass ? (@model = klass) : @model
-      def policy(klass) = @policy = klass
+
+      def policy(klass)
+        @policy = klass
+        self
+      end
+
       def scope(name) = @scope = name.to_sym
       def includes(*associations) = @includes.concat(associations.flatten)
 
@@ -56,6 +61,8 @@ module SearchablePg
       # --- Used by Query ---
 
       def label = @label.respond_to?(:call) ? @label.call : @label
+
+      def scope_name = @scope
 
       def policy_class
         raise Error, "global search kind :#{type} needs a policy (or `policy false` when visible alone decides)" if @policy == :unset
@@ -69,31 +76,40 @@ module SearchablePg
         self
       end
 
-      def visible?(context) = @visible ? !!@visible.call(context.user, context) : true
+      def visible?(context) = @visible ? !!invoke(@visible, context.user, context) : true
 
       # The rows the user may open, matched, best match first, then `later`
       # rows last.
       def matches(base, context)
-        base = @relation.call(base, context) if @relation
-        matched = @search ? @search.call(base, context) : base.public_send(@scope, context.query)
+        base = invoke(@relation, base, context) if @relation
+        matched = @search ? invoke(@search, base, context) : base.public_send(@scope, context.query)
         matched = matched.includes(*@includes) if @includes.any?
         return matched unless @later
         model = matched.klass
-        later = @later.call(base, context).select(model.primary_key)
+        later = invoke(@later, base, context).select(model.primary_key)
         matched.reorder(Arel::Nodes::Grouping.new(model.arel_table[model.primary_key].in(later.arel))).order(*matched.order_values)
       end
 
       def items(records, context)
-        context.prepared = @prepare&.call(records, context)
+        context.prepared = @prepare && invoke(@prepare, records, context)
         records.map do |record|
           Item.new(
             id: record.id,
-            title: @title.call(record, context),
-            subtitle: @subtitle&.call(record, context),
-            url: @url&.call(record, context),
-            snippet: @snippet&.call(record, context)
+            title: invoke(@title, record, context),
+            subtitle: @subtitle && invoke(@subtitle, record, context),
+            url: @url && invoke(@url, record, context),
+            snippet: @snippet && invoke(@snippet, record, context)
           )
         end
+      end
+
+      private
+
+      # A block takes what it names; a lambda (or &:title) only as many
+      # arguments as it requires.
+      def invoke(block, *args)
+        return block.call(*args) unless block.lambda?
+        block.call(*args.first((block.arity >= 0) ? block.arity : -block.arity - 1))
       end
     end
   end
