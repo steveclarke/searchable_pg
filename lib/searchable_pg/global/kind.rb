@@ -105,11 +105,13 @@ module SearchablePg
 
       private
 
-      # A block takes what it names; a lambda (or &:title) only as many
-      # arguments as it requires.
+      # A block takes what it names; a lambda only as many arguments as it
+      # declares, and &:title only the record.
       def invoke(block, *args)
         return block.call(*args) unless block.lambda?
-        block.call(*args.first((block.arity >= 0) ? block.arity : -block.arity - 1))
+        kinds = block.parameters.map(&:first)
+        return block.call(*args) if kinds.include?(:rest) && kinds != [:req, :rest]
+        block.call(*args.first(kinds.count { |kind| kind == :req || kind == :opt }))
       end
     end
   end

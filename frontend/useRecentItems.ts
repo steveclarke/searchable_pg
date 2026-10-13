@@ -53,7 +53,7 @@ export function useRecentItems(userId: string | number) {
   const save = () => write(key, { items: items.value, queries: queries.value });
 
   const remember = (item: RecentItem) => {
-    items.value = [item, ...items.value.filter((it) => !(it.kind === item.kind && it.id === item.id))].slice(0, RECENT_ITEMS);
+    items.value = [item, ...items.value.filter((it) => !(it.kind === item.kind && String(it.id) === String(item.id)))].slice(0, RECENT_ITEMS);
     save();
   };
 

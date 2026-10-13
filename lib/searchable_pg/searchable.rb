@@ -34,7 +34,7 @@ module SearchablePg
     # hold inside the subquery as well.
     def self.each_word(relation, ranked, words)
       words.reduce(relation.public_send(ranked, words.join(" "))) do |matched, word|
-        own = relation.unscope(:order, :limit, :offset, :select, :includes, :preload, :eager_load)
+        own = relation.unscope(:order, :limit, :offset, :select, :preload)
         matched.where(id: own.public_send(ranked, word).reorder(nil).select(:id))
       end
     end

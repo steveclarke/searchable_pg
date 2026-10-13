@@ -58,7 +58,7 @@ class GlobalTest < ActiveSupport::TestCase
     last = search(@office, "choir", kind: "team", page: 3).groups.sole
     assert_equal ["Choir 6"], last.results.map(&:title)
     refute last.more
-    assert_raises(ArgumentError) { search(@office, "choir", kind: :nothing) }
+    assert_raises(SearchablePg::Global::InvalidQuery) { search(@office, "choir", kind: :nothing) }
   end
 
   test "picks the top hit: an exact title, else a title starting with the query, else the first result" do
@@ -167,5 +167,13 @@ class GlobalTest < ActiveSupport::TestCase
     assert_equal %i[id title subtitle url snippet], envelope[:groups].first[:results].first.keys
     refute_includes envelope.to_json, "0142"
     refute_includes envelope.to_json, "Adelaide"
+  end
+
+  test "passes a lambda the arguments it declares" do
+    kind = SearchablePg::Global::Kind.new(:x, label: "X")
+    seen = []
+    [->(a) { seen << [a] }, ->(a, b = nil) { seen << [a, b] }, ->(*all) { seen << all }, proc { |a, b| seen << [a, b] }].each { |block| kind.send(:invoke, block, 1, 2) }
+    assert_equal [[1], [1, 2], [1, 2], [1, 2]], seen
+    assert_equal "Choir", kind.send(:invoke, :name.to_proc, Team.new(name: "Choir"), :ctx)
   end
 end

@@ -44,7 +44,7 @@ SearchablePg.configure do |c|
 end
 ```
 
-Settings are read while models load and frozen once the app has booted.
+Settings are read while models load and frozen once the app has booted. A model loaded by an initializer that runs before `searchable_pg.rb` would build its scopes on the defaults, so no earlier initializer refers to a searchable model.
 
 ## Quick start
 

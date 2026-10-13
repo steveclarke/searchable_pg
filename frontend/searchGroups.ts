@@ -44,6 +44,7 @@ export type SearchGroupsOptions = {
 // inserted, so it stays text.
 export function snippetText(snippet: string | null): string | undefined {
   if (!snippet) return undefined;
+  if (typeof DOMParser === "undefined") return snippet.replace(/<\/?mark>/g, "");
   return new DOMParser().parseFromString(snippet, "text/html").body.textContent ?? undefined;
 }
 

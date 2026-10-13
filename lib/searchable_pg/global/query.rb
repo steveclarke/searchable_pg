@@ -43,7 +43,7 @@ module SearchablePg
       end
 
       def kinds
-        return [@registry.find(@kind) || raise(ArgumentError, "unknown global search kind #{@kind.inspect}")] if @kind
+        return [@registry.find(@kind) || raise(InvalidQuery, "unknown kind #{@kind.inspect}")] if @kind
         @registry.kinds.reject { |kind| @except.include?(kind.type) }
       end
 
@@ -51,7 +51,7 @@ module SearchablePg
         context = Kind::Context.new(user: @user, query: @query, routes:, options: @options)
         return unless kind.visible?(context)
         limit, offset = @kind ? [@registry.page_size, (@page - 1) * @registry.page_size] : [@registry.per_kind, 0]
-        items = timed do
+        items = timed(kind.model) do
           relation = kind.matches(@registry.scope_for(@user, kind), context)
           records = relation.limit(limit + 1).offset(offset).to_a
           [kind.items(records.first(limit), context), records.size > limit]
@@ -75,20 +75,23 @@ module SearchablePg
 
       def fold(text) = ActiveSupport::Inflector.transliterate(text.to_s).downcase.squish
 
-      def timed
+      # Each kind in its own savepoint on its model's connection, so a
+      # cancelled query rolls back only that kind and the timeout is restored.
+      def timed(model)
         timeout = @registry.statement_timeout
         return yield unless timeout
-        connection = ActiveRecord::Base.lease_connection
-        connection.transaction(requires_new: true) do
-          previous = connection.select_value("SHOW statement_timeout")
-          connection.execute("SET LOCAL statement_timeout = #{connection.quote(timeout.to_s)}")
-          result = yield
-          connection.execute("SET LOCAL statement_timeout = #{connection.quote(previous)}")
-          result
+        model.with_connection do |connection|
+          connection.transaction(requires_new: true) do
+            previous = connection.select_value("SHOW statement_timeout")
+            connection.execute("SET LOCAL statement_timeout = #{connection.quote(timeout.to_s)}")
+            result = yield
+            connection.execute("SET LOCAL statement_timeout = #{connection.quote(previous)}")
+            result
+          end
+        rescue ActiveRecord::QueryCanceled
+          @partial = true
+          nil
         end
-      rescue ActiveRecord::QueryCanceled
-        @partial = true
-        nil
       end
 
       def routes
