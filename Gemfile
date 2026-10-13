@@ -10,6 +10,8 @@ if rails_version == "main"
 else
   gem "rails", "~> #{rails_version}.0"
 end
+# Rails 8.0's JSON encoder passes options json 3 refuses (quirks_mode).
+gem "json", "< 3" if rails_version == "8.0"
 
 gem "irb"
 gem "rake", "~> 13.0"
