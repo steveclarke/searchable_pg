@@ -49,7 +49,7 @@ module SearchablePg
         lock = @entries.fetch(model.name).rebuild_lock
         count = 0
         model.unscoped.ids.each do |id|
-          write = -> { model.unscoped.find_by(id:)&.rebuild_search_projection }
+          write = proc { model.unscoped.find_by(id:)&.rebuild_search_projection }
           lock ? lock.call(id, &write) : write.call
           count += 1
         end

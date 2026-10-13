@@ -14,9 +14,12 @@ class Person < ApplicationRecord
   searchable_with SearchContent::Person, project: true, rebuild: :manual,
     rebuild_lock: ->(id, &write) {
       Person.locked << id
-      write.call
+      Person.yield_lock(&write)
     }
   searchable_with SearchContent::PersonName, scope: :search_names
 
   def self.locked = (@locked ||= [])
+
+  # Like a lock library that hands the block what it holds.
+  def self.yield_lock(&write) = write.call(:held)
 end
