@@ -33,9 +33,10 @@ class SearchableGeneratorTest < Rails::Generators::TestCase
       assert_includes content, 'require "rails_helper"'
       assert_includes content, "RSpec.describe SearchContent::Article, type: :model do"
       assert_includes content, "let(:record) { Article.new }"
-      assert_includes content, "expect(builder.search_projection).to be_a(String)"
+      assert_includes content, "expect(builder.search_projection).to be_nil.or be_a(String)"
     end
     assert_no_file "test/models/search_content/article_test.rb"
+    assert_no_file "lib/tasks/search/rebuild_article.rake"
   end
 
   test "generates an RSpec file when Rails generator config uses RSpec" do

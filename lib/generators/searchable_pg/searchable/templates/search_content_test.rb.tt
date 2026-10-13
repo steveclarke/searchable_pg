@@ -12,7 +12,7 @@ class SearchContent::<%= class_name %>Test < ActiveSupport::TestCase
   test "builds projection" do
     record = <%= class_name %>.new
     builder = SearchContent::<%= class_name %>.new(record)
-    assert_kind_of String, builder.search_projection
+    assert(builder.search_projection.nil? || builder.search_projection.is_a?(String))
   end
 <% end -%>
 end

@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+# searchable_pg settings (written by searchable_pg <%= SearchablePg::VERSION %>).
+# Every builder may set its own: `matching :every_word` in a SearchContent class.
+SearchablePg.configure do |c|
+  # :any_word: one word of the query is enough (broad lists, "similar" candidates).
+  # :every_word: every word must match; "Ada Moss" never finds Ada Marsh.
+  c.matching = :<%= options[:matching] %>
+
+  # Near-spelling threshold. Unset: 0.3 under :any_word, 0.55 under :every_word.
+  # c.trigram_threshold = 0.3
+
+  # :callbacks: search_projection rebuilt on save and on touch.
+  # :manual: the app calls rebuild_search_projection where its inputs change.
+  c.projection_rebuild = :<%= options[:projection_rebuild] %>
+end

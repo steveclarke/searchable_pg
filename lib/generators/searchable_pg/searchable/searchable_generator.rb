@@ -41,14 +41,6 @@ class SearchablePg::SearchableGenerator < Rails::Generators::NamedBase
       "db/migrate/add_search_projection_to_#{table_name}.rb"
   end
 
-  def add_rebuild_task
-    return unless options[:project]
-
-    @task_name = file_path.tr("/", "_")
-    template "search_tasks.rake.tt",
-      File.join("lib/tasks/search", "rebuild_#{@task_name}.rake")
-  end
-
   def inject_into_model
     return if options[:skip_model_injection]
 

@@ -1,0 +1,113 @@
+{
+  "john": [
+    "John Smith",
+    "Johnny Smithers",
+    "Jon Smyth",
+    "José Álvarez",
+    "Jose Alvarado"
+  ],
+  "john smith": [
+    "John Smith",
+    "Johnny Smithers",
+    "Mary Smith",
+    "Jon Smyth"
+  ],
+  "smith": [
+    "John Smith",
+    "Johnny Smithers",
+    "Mary Smith",
+    "Jon Smyth"
+  ],
+  "smyth": [
+    "Jon Smyth",
+    "John Smith",
+    "Johnny Smithers",
+    "Mary Smith"
+  ],
+  "mary jane": [
+    "Mary-Jane Watson",
+    "Mary Smith",
+    "Ada Marsh"
+  ],
+  "ada moss": [
+    "Ada Moss",
+    "Ada Marsh",
+    "Kit Moss"
+  ],
+  "moss": [
+    "Ada Moss",
+    "Kit Moss"
+  ],
+  "mos": [
+    "Ada Moss",
+    "Kit Moss"
+  ],
+  "jose": [
+    "José Álvarez",
+    "Jose Alvarado",
+    "John Smith",
+    "Johnny Smithers",
+    "Jon Smyth"
+  ],
+  "alvarez": [
+    "José Álvarez",
+    "Jose Alvarado"
+  ],
+  "running": [
+    "Running Brook Farms",
+    "Brooks Runner"
+  ],
+  "runs": [
+    "Running Brook Farms",
+    "Brooks Runner"
+  ],
+  "brook": [
+    "Running Brook Farms",
+    "Brooks Runner"
+  ],
+  "zoe": [
+    "Zoë Pike"
+  ],
+  "featherstonhaugh": [
+    "Featherstonehaugh Wick"
+  ],
+  "linden": [
+    "Linden Hall"
+  ],
+  "lindon": [
+    "Linden Hall"
+  ],
+  "2330": [
+    "IBEW Local 2330",
+    "John Smith"
+  ],
+  "ibew local": [
+    "IBEW Local 2330",
+    "Local Electricians",
+    "John Smith"
+  ],
+  "local": [
+    "IBEW Local 2330",
+    "Local Electricians"
+  ],
+  "0123": [
+    "John Smith",
+    "Jon Smyth",
+    "Linden Hall"
+  ],
+  "john@ibew2330.org": [
+    "John Smith"
+  ],
+  "kit@moss.test": [
+    "Kit Moss",
+    "Ada Moss"
+  ],
+  "555": [
+    "Linden Hall",
+    "Jon Smyth"
+  ],
+  "watson mary": [
+    "Mary-Jane Watson",
+    "Mary Smith"
+  ]
+}

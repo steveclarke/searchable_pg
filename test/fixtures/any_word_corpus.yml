@@ -1,0 +1,20 @@
+# Contacts for the any_word golden test (Outport's shape: names, emails and
+# phones in the projection).
+contacts:
+  - {name: "John Smith", emails: [john@ibew2330.org], phones: ["+17095550123"]}
+  - {name: "Johnny Smithers"}
+  - {name: "Jon Smyth", phones: ["709-555-0199"]}
+  - {name: "Mary Smith", emails: [mary@example.com]}
+  - {name: "Mary-Jane Watson"}
+  - {name: "Ada Moss"}
+  - {name: "Ada Marsh"}
+  - {name: "Kit Moss", emails: [kit@moss.test]}
+  - {name: "José Álvarez"}
+  - {name: "Jose Alvarado"}
+  - {name: "Running Brook Farms"}
+  - {name: "Brooks Runner"}
+  - {name: "Zoë Pike"}
+  - {name: "Featherstonehaugh Wick"}
+  - {name: "Linden Hall", phones: ["(709) 555-0142 x12"]}
+  - {name: "IBEW Local 2330"}
+  - {name: "Local Electricians"}
