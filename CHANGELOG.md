@@ -4,6 +4,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Fixed
+
+- `SearchablePg.normalize` drops apostrophes (straight and curly), so "St. John's" matches an indexed "St. John's" under `:every_word`.
+
 ## [0.2.0] - 2026-10-13
 
 Everything is additive: an app that changes nothing keeps 0.1.0's results.
