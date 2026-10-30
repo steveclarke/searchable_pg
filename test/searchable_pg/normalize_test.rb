@@ -13,6 +13,9 @@ class NormalizeTest < ActiveSupport::TestCase
       "1-709-555-0142" => "709 555 0142",
       "+44 20 7946 0958" => "44 20 7946 0958",
       "jo.2@example.test" => "jo.2@example.test",
+      "St. John's" => "St Johns",
+      "John\u2019s" => "Johns",
+      "o'brien@example.test" => "obrien@example.test",
       nil => ""
     }.each { |query, expected| assert_equal expected, SearchablePg.normalize(query), query.inspect }
     assert_equal "709 555 0142", Searchable.normalize("(709) 555-0142")

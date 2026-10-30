@@ -6,9 +6,11 @@ module SearchablePg
   # projection holds and "ada.moss" as two words; a leading "+" goes, and the
   # country code "1" before a ten-digit number. Email addresses are left
   # whole. PostgreSQL would otherwise read "555-0142" as "555" and "-0142".
+  # Apostrophes go without leaving a space: pg_search strips them from the
+  # indexed text, so "John's" is held as "johns" and must be searched as it.
   module Normalize
     def self.call(query)
-      query.to_s.squish.delete_prefix("+").split.map { |word|
+      query.to_s.delete("'\u2019").squish.delete_prefix("+").split.map { |word|
         word.include?("@") ? word : word.gsub(%r{[-.,/()]+}, " ")
       }.join(" ").squish.sub(/\A1 ?(?=\d{3} ?\d{3} ?\d{4}\z)/, "")
     end
